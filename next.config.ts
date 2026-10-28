@@ -1,10 +1,12 @@
 import type { NextConfig } from "next";
 
-const basePath = process.env.NODE_ENV === "production" ? "/" : "";
+// Currently served from reload.github.io/biblogo, so assets need the /biblogo prefix.
+// TODO: once a custom domain is set up (with a public/CNAME file), switch to the line below instead:
+// const basePath = "";
+const basePath = "/biblogo";
 
 const nextConfig: NextConfig = {
   output: "export",
-  // Site is served from the domain root, so no path prefix is needed
   basePath: basePath,
   assetPrefix: basePath,
   // Ensure static export generates trailing slashes for directories
