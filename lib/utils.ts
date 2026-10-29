@@ -1,13 +1,28 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { basePath } from "@/lib/basePath";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
 export function buildRedirectParam(pathname: string, search: string): string {
-  const fullPath = pathname + search;
-  return `/?from=${encodeURIComponent(fullPath)}`;
+  // Strip the base path so the captured path is app-relative.
+  const relativePath =
+    basePath && pathname.startsWith(basePath)
+      ? pathname.slice(basePath.length) || "/"
+      : pathname;
+
+  // If we are already on a redirect URL, reuse the original `from` value
+  // instead of nesting it again. Without this, a redirect that lands back on
+  // the not-found handler re-encodes the whole URL on every pass and loops
+  // with ever-growing %25 escapes.
+  const existingFrom = new URLSearchParams(search).get("from");
+  const fullPath = existingFrom ?? relativePath + search;
+
+  // The target must include the base path, otherwise it lands outside the app
+  // and hits the not-found handler again.
+  return `${basePath}/?from=${encodeURIComponent(fullPath)}`;
 }
 
 type BuildRedirectUrlParams = {

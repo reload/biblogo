@@ -1,7 +1,9 @@
-// Currently served from reload.github.io/biblogo, so assets need the /biblogo prefix.
-// TODO: once a custom domain is set up (with a public/CNAME file), switch to the line below instead:
+// Single source of truth for the base path.
+
+// TODO: once a custom domain is set up (with a public/CNAME file), the site
+// will be served from the root in production too — change this to:
 // const basePath = "";
-const basePath = "/biblogo";
+export const basePath = process.env.NODE_ENV === "production" ? "/biblogo" : "";
 
 export const addBasePath = (path: string) => {
   return `${basePath}${path}`;
