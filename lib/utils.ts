@@ -13,10 +13,6 @@ export function buildRedirectParam(pathname: string, search: string): string {
       ? pathname.slice(basePath.length) || "/"
       : pathname;
 
-  // If we are already on a redirect URL, reuse the original `from` value
-  // instead of nesting it again. Without this, a redirect that lands back on
-  // the not-found handler re-encodes the whole URL on every pass and loops
-  // with ever-growing %25 escapes.
   const existingFrom = new URLSearchParams(search).get("from");
   const fullPath = existingFrom ?? relativePath + search;
 
